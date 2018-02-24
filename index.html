@@ -117,3 +117,121 @@
 </head>
 <body>
     <section id='test'>
+    <script type='text/javascript'>
+    Array.prototype.max = function() {
+    return Math.max.apply(null, this);
+    };
+
+    Array.prototype.min = function() {
+    return Math.min.apply(null, this);
+    };
+    var currentpoints = 0;
+    var questions = [
+        "Which operating system do you use?",
+        "Which operating system do you prefer?",
+        "Do you prefer functionality over design?",
+        "What do you tend to use your computer for?",
+        "Do you like using Microsoft Office?",
+        "Do you prefer lots of customization or just presets?",
+        "Do you work in the tech industry?",
+        "Do you work a sedentary job?",
+        "Do you install lots of things onto your computer?",
+        "Do you care highly about preinstalled malware protection?"
+    ];
+    var answers = [
+        ["Mac","Windows","Both","None of the Above"],
+        ["Mac","Windows","Both","None of the Above"],
+        ["Yes","No","A Balance of The Two"],
+        ["Work","Home","Both","None of the Above"],
+        ["Yes","No","Sometimes"],
+        ["Just Presets","Lots of Customization","Some Customization"],
+        ["Yes","No"],
+        ["Yes","No"],
+        ["Yes","No"],
+        ["Yes","No","A Bit"]
+    ];
+    var points = [
+        [0,0,0,0],
+        [1,10,5,5],
+        [10,1,5],
+        [7.5,2.5,5],
+        [6,5,4],
+        [2.5,10,6.5],
+        [8,4],
+        [6.5,5],
+        [5.5,5],
+        [2.5,5,6.5]
+    ];
+
+    var maxpoints = 0;
+    var minpoints = 0;
+    var l;
+    for(l=0;l<points.length;l++){
+        maxpoints += points[l].max();
+        minpoints += points[l].min();
+    }
+    var centerpoint = (maxpoints+minpoints)/2;
+
+    var i;
+    var k;
+    var questionhtml;
+    var currentanswer;
+    for(i=0;i<questions.length;i++){
+        questionhtml = "<div class='question'><h1>" + questions[i] + "</h1>" + "<ul>"
+        for(k=0;k<answers[i].length;k++){
+            currentanswer = answers[i];
+            questionhtml += "<li>" + currentanswer[k] + "</li>";
+        }
+        questionhtml += "</ul></div>";
+        document.write(questionhtml);
+    }
+
+    function getAnswer(){
+        currentpoints = 0;
+        var allquestions = document.getElementsByClassName("question");
+        var i;
+        for(i=0;i<allquestions.length;i++){
+            var currentquestions = allquestions[i].getElementsByTagName("ul")[0];
+            if(currentquestions.getElementsByClassName("selected").length==0){
+                currentpoints += 5;
+            }else{
+                var personanswer = currentquestions.getElementsByClassName("selected")[0].innerHTML;
+                var currentallanswers = answers[i];
+                var personanswernum = currentallanswers.indexOf(personanswer);
+                var currentquestionpoints = points[i];
+                currentpoints += currentquestionpoints[personanswernum];
+            }
+        }
+        if(currentpoints>centerpoint){
+            alert("You're A Windows Person!");
+        }else{
+            alert("You're A Mac Person!");
+        }
+    }
+
+    </script>
+    <button type='button' class='submitbtn' onclick='getAnswer();'>Submit</button>
+
+    <script type='text/javascript'>
+
+    function parseAnswer(theanswer){
+        var allanswers = theanswer.parentNode.getElementsByTagName("li");
+        var i;
+        for(i=0;i<allanswers.length;i++){
+            allanswers[i].setAttribute("class","");
+        }
+        theanswer.setAttribute("class","selected");
+    }
+    var allquestions = document.getElementsByClassName("question");
+    var questionindex;
+    var currentquestions;
+    var answerindex;
+    for(questionindex=0;questionindex<allquestions.length;questionindex++){
+        var currentquestions = allquestions[questionindex].getElementsByTagName("ul")[0].getElementsByTagName("li");
+        for(answerindex=0;answerindex<currentquestions.length;answerindex++){
+            currentquestions[answerindex].setAttribute("onclick","parseAnswer(this)");
+        }
+    }
+    
+    </script>
+    </section>
